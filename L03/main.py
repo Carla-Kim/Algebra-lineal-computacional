@@ -66,31 +66,68 @@ print(norma(v, 3)) # 16.97343023666491
 # ejecicio 2
 
 def normaMatMc(matriz, q, p, Np):
-    m = matriz.shape[0]
     n = matriz.shape[1]
 
-    max_norm = -np.inf
-    x_max = None
+    maxNorm = -np.inf # valor inicial muy pequeño
+    xMax = None
     
     for _ in range(Np):
-        # Generar vector aleatorio
+        # generar vector aleatorio
         x = np.random.randn(n)
+
         # Normalizar con norma p = 1
         x = x / norma(x, p)
         
         # Evaluar norma q de Ax
         Ax = matriz @ x
         val = norma(Ax, q)
+
+        if val > maxNorm:
+            maxNorm = val
+            xMax = x
         
-        if val > max_norm:
-            max_norm = val
-            x_max = x.copy()
-    
-    return max_norm, x_max
+    return maxNorm, xMax
 
 A = np.array([[1, 2], 
               [3, 4]])
 
 valor, x = normaMatMc(A, q=2, p=2, Np=10000)
-print("Norma inducida aproximada:", valor)
-print("Vector donde se alcanza:", x)
+print("Norma inducida aproximada:", valor) # 7.05103848916485 
+print("Vector donde se alcanza:", x) #[-1.75071981 -0.40376836]
+
+def normaExacta(matriz, p=[1, "inf"]):
+    n = matriz.shape[0]
+    m = matriz.shape[1]
+    matrizAux1 = np.zeros(n)
+    matrizAux2 = np.zeros(m)
+    normaInf = 0
+    normaUno = 0
+
+    for i in range(n):
+        matrizAux1[i] = sum(abs(matriz[i, :]))
+    normaInf = np.max(matrizAux1)
+
+    for i in range(m):
+        matrizAux2[i] = sum(abs(matriz[:, i]))
+    normaUno = np.max(matrizAux2)
+
+    if p == 1:
+        return normaUno
+    elif p == "inf":
+        return normaInf
+    else:
+        return "p debe ser 1 o 'inf'"
+
+
+A = np.array([[1, -2, 3],
+              [4,  0, -1]])
+
+print("Norma 1:   ", normaExacta(A, 1)) # Norma 1:    5.0
+print("Norma inf: ", normaExacta(A, "inf")) # Norma inf:  6.0
+
+# ejercicio 3
+def condMC(matriz, p):
+    return normaMatMc(matriz, p, p, 1000)[0] * normaMatMc(np.linalg.inv(matriz), p, p, 1000)[0]
+
+def condExacta(matriz, p):
+    return normaExacta(matriz, p) * normaExacta(np.linalg.inv(matriz), p)

@@ -164,7 +164,9 @@ def calculaLU(A):
     """
     Calcula la factorización LU de la matriz A y retorna las matrices L y U,
     junto con el número de operaciones realizadas. 
-    En caso de que la matriz no pueda factorizarse, retorna None.
+
+    Notar que a medida que el tamaño de la matriz aumenta, la estabilidad numérica va reduciendose debido a la cantidad de operaciones que se realizan, especialmente por la división y la limitada representación de los números irracionales. 
+
     """
     cant_op = 0
     m = A.shape[0]
@@ -199,7 +201,23 @@ def res_tri(L, b, inferior=True):
     Se puede indicar si es triangular inferior o superior usando el argumento 
     'inferior' (por defecto, se asume triangular inferior).
     """
-    pass
+    n = len(b)
+    x = np.zeros(n)
+
+    if inferior:  # Sustitución hacia adelante
+        for i in range(n):
+            suma = 0
+            for j in range(i):
+                suma += L[i][j] * x[j]
+            x[i] = (b[i] - suma) / L[i][i]
+    else:  # Sustitución hacia atrás
+        for i in range(n-1, -1, -1):
+            suma = 0
+            for j in range(i+1, n):
+                suma += L[i][j] * x[j]
+            x[i] = (b[i] - suma) / L[i][i]
+    
+    return x
 
 
 def inversa(A):
@@ -207,7 +225,19 @@ def inversa(A):
     Calcula la inversa de A empleando la factorización LU
     y las funciones que resuelven sistemas triangulares.
     """
-    pass
+    n = A.shape[0]
+    L, U, _ = calculaLU(A)
+    
+    invA = np.zeros_like(A, dtype=float)
+    
+    for i in range(n):
+        ei = np.zeros(n)
+        ei[i] = 1
+        y = res_tri(L, ei, inferior=True)   # Ly = e_i
+        x = res_tri(U, y, inferior=False)   # Ux = y
+        invA[:, i] = x
+    
+    return invA
 
 
 def calculaLDV(A):
@@ -216,7 +246,20 @@ def calculaLDV(A):
     con L triangular inferior, D diagonal y V triangular superior.
     En caso de que la matriz no pueda factorizarse, retorna None.
     """
-    pass
+    n = A.shape[0]
+    L, U, _ = calculaLU(A)
+    D = np.diag(np.diag(U))
+    
+    V = np.eye(n)
+    for i in range(n):
+        for j in range(i+1, n):
+            V[i, j] = U[i, j] / D[i, i]
+    
+    # Revisar si hay pivotes cero
+    if np.any(np.diag(D) == 0):
+        return None
+    
+    return L, D, V
 
 
 def esSDP(A, atol=1e-8):
@@ -224,7 +267,18 @@ def esSDP(A, atol=1e-8):
     Verifica si la matriz A es simétrica definida positiva (SDP)
     usando la factorización LDV.
     """
-    pass
+    if not np.allclose(A, A.T, atol=atol):
+        return False
+    
+    res = calculaLDV(A)
+    if res is None:
+        return False
+    
+    _, D, _ = res
+    if np.any(np.diag(D) <= 0):
+        return False
+    
+    return True
 
 ##L05
 def QRconGS(A, tol=1e-12, retorna_nops=False):

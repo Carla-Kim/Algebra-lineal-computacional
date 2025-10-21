@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import moduloALC as alc
+
 
 # ejercicio 1
 
@@ -146,7 +146,7 @@ A = np.array([[4., 2., 1.], [2., 7., 9.], [0., 5., 22/3]])
 L = np.array([[1., 0., 0.], [0.5, 1., 0.], [0., 5/6, 1.]])
 U = np.array([[4., 2., 1.], [0., 6., 8.5], [0., 0., 0.25]])
 
-print("¿La descomposicón LU es la misma?", alc.matricesIguales(A, L@U)) # deveria dar true
+print("¿La descomposicón LU es la misma?", alc.matricesIguales(A, L@U)) # deberia dar true
 
 # ejercicio 6
 A = np.array(np.random.rand(4,4))

@@ -328,3 +328,84 @@ def calculaQR(A, metodo='RH', tol=1e-12):
     - Si el método no está entre las opciones, retorna None.
     """
     pass
+
+##L06
+def metpot2k(A, tol=1e-15, K=1000):
+    """
+    A: una matriz de n x n
+    tol: tolerancia en la diferencia entre un paso y el siguiente de la estimación del
+         autovector.
+    K: el número máximo de iteraciones a realizarse.
+    Retorna vector v, autovalor lambda y número de iteración realizada k.
+    """
+
+
+def diagRH(A, tol=1e-15, K=1000):
+    """
+    A: una matriz simétrica de n x n
+    tol: tolerancia en la diferencia entre un paso y el siguiente de la estimación del
+         autovector. K: el número máximo de iteraciones a realizarse.
+    Retorna matriz de autovectores S y matriz de autovalores D, tal que A = S D S.T
+    Si la matriz A no es simétrica, debe retornar None.
+    """
+
+##L07
+def transiciones_al_azar_continuas(n):
+    """
+    n: la cantidad de filas (columnas) de la matriz de transición.
+    Retorna matriz T de n x n normalizada por columnas, y con entradas
+    aleatorias en el intervalo [0, 1].
+    """
+
+
+def transiciones_al_azar_uniforme(n, thres):
+    """
+    n: la cantidad de filas (columnas) de la matriz de transición.
+    thres: probabilidad de que una entrada sea distinta de cero.
+    Retorna matriz T de n x n normalizada por columnas. El elemento i,j es distinto de
+    cero si el número generado al azar para i,j es menor o igual a thres. Todos los
+    elementos de la columna j son iguales (a 1 sobre el número de elementos distintos
+    de cero en la columna).
+    """
+
+
+def nucleo(A, tol=1e-15):
+    """
+    A: una matriz de m x n
+    tol: tolerancia para asumir que un vector está en el núcleo.
+    Calcula el núcleo de la matriz A diagonalizando la matriz traspuesta (A).T * A
+    (la multiplicación matricial), usando el método diagRH. El núcleo corresponde a los
+    autovectores de autovalor con módulo <= tol.
+    Retorna los autovectores en cuestión, como una matriz de n x k, con k el número de
+    autovectores en el núcleo.
+    """
+
+
+def crear_ala(listado, mfilas, ncolumnas, tol=1e-15):
+    """
+    Recibe una lista listado, con tres elementos: lista con índices i, lista con índices
+    j, y lista con valores Aij de la matriz A. También las dimensiones de la matriz a
+    través de mfilas y ncolumnas. Los elementos menores a tol se descartan.
+    Idealmente, el listado debe incluir únicamente posiciones correspondientes a valores
+    distintos de cero. Retorna una lista con:
+      - Diccionario {(i, j): Aij} que representa los elementos nonulos de la matriz A.
+        Los elementos con módulo menor a tol deben descartarse por default.
+      - Tupla (mfilas, ncolumnas) que permita conocer las dimensiones de la matriz.
+    """
+
+
+def multiplicar_ala_vector(A, v):
+    """
+    Recibe una matriz creada con crear_ala y un vector v.
+    Retorna un vector w resultado de multiplicar A con v.
+    """
+
+##L08
+def svd_reducida(A, k="max", tol=1e-15):
+    """
+    A: la matriz de interés (de m x n)
+    k: el número de valores singulares (y vectores) a retener.
+    tol: tolerancia para considerar un valor singular igual a cero.
+    Retorna hatU (matriz de m x k), hatSig (vector de k valores singulares) y hatV
+    (matriz de n x k).
+    """
